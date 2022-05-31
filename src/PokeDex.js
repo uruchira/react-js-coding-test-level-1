@@ -5,6 +5,7 @@ import Modal from "react-modal";
 
 import Loading from "./components/Loading";
 import Sorting from "./components/Sorting";
+import Pagination from "./components/Pagination";
 
 import { ASC, DESC } from "./constants";
 import { modalStyles } from "./styles";
@@ -18,12 +19,20 @@ function PokeDex() {
   const [searchText, setSearchText] = useState("");
   const [sortOption, setSortOption] = useState("");
 
-  const fetchPokemonData = async () => {
+  const [currentPageUrl, setCurrentPageUrl] = useState(
+    "https://pokeapi.co/api/v2/pokemon"
+  );
+  const [nextPageUrl, setNextPageUrl] = useState();
+  const [previousPageUrl, setPreviousPageUrl] = useState();
+
+  const fetchPokemonData = async (url) => {
     setIsLoading(true);
     try {
-      const { data } = await axios.get("https://pokeapi.co/api/v2/pokemon");
+      const { data } = await axios.get(url);
       setError(null);
       setPokemons(data.results);
+      setNextPageUrl(data.next);
+      setPreviousPageUrl(data.previous);
     } catch (error) {
       setError(error);
     } finally {
@@ -32,16 +41,24 @@ function PokeDex() {
   };
 
   useEffect(() => {
-    fetchPokemonData();
-  }, []);
+    fetchPokemonData(currentPageUrl);
+  }, [currentPageUrl]);
 
-  const onSearchTextChange = (e) => {
+  function onSearchTextChange(e) {
     setSearchText(e.target.value);
-  };
+  }
 
-  const onSortChange = (option) => {
+  function onSortChange(option) {
     setSortOption(option);
-  };
+  }
+
+  function gotoNextPage() {
+    setCurrentPageUrl(nextPageUrl);
+  }
+
+  function gotoPreviousPage() {
+    setCurrentPageUrl(previousPageUrl);
+  }
 
   const pokemonItems = useMemo(() => {
     const filteredData = pokemons.filter(({ name }) =>
@@ -89,6 +106,10 @@ function PokeDex() {
         <Sorting sortOption={sortOption} onSortChange={onSortChange} />
         <br />
         <>{renderPokemonData()}</>
+        <Pagination
+          gotoNextPage={nextPageUrl ? gotoNextPage : null}
+          gotoPrevPage={previousPageUrl ? gotoPreviousPage : null}
+        />
       </header>
       {pokemonDetail && (
         <Modal
