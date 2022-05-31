@@ -39,6 +39,7 @@ function Home() {
         <input
           type="text"
           name="name"
+          className="App-input"
           value={text}
           onChange={(e) => handleTextChange(e)}
         />

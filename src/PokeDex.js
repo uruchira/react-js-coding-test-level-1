@@ -1,13 +1,15 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import ReactLoading from "react-loading";
 import axios from "axios";
 import Modal from "react-modal";
+
+import Loading from "./components/Loading";
 
 function PokeDex() {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonDetail, setPokemonDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const customStyles = {
     content: {
@@ -23,6 +25,31 @@ function PokeDex() {
     overlay: { backgroundColor: "grey" },
   };
 
+  const fetchPokemonData = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await axios.get("https://pokeapi.co/api/v2/pokemon");
+      setError(null);
+      setPokemons(data.results);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPokemonData();
+  }, []);
+
+  if (error) {
+    return (
+      <header className="App-header">
+        <p>{error.message}</p>
+      </header>
+    );
+  }
+
   if (!isLoading && pokemons.length === 0) {
     return (
       <div>
@@ -32,11 +59,12 @@ function PokeDex() {
           <ul>
             <li>
               Call this api:https://pokeapi.co/api/v2/pokemon to get pokedex,
-              and show a list of pokemon name.
+              and show a list of pokemon name. (DONE)
             </li>
-            <li>Implement React Loading and show it during API call</li>
+            <li>Implement React Loading and show it during API call (DONE)</li>
             <li>
               when hover on the list item , change the item color to yellow.
+              (DONE)
             </li>
             <li>when clicked the list item, show the modal below</li>
             <li>
@@ -59,28 +87,26 @@ function PokeDex() {
     <div>
       <header className="App-header">
         {isLoading ? (
-          <>
-            <div className="App">
-              <header className="App-header">
-                <b>Implement loader here</b>
-              </header>
-            </div>
-          </>
+          <Loading type="spin" color="white" />
         ) : (
           <>
             <h1>Welcome to pokedex !</h1>
-            <b>Implement Pokedex list here</b>
+            <ul className="pokemon-list">
+              {pokemons.map((pokemon) => (
+                <li key={pokemon.url}>{pokemon.name}</li>
+              ))}
+            </ul>
           </>
         )}
       </header>
       {pokemonDetail && (
         <Modal
+          style={customStyles}
           isOpen={pokemonDetail}
           contentLabel={pokemonDetail?.name || ""}
           onRequestClose={() => {
             setPokemonDetail(null);
           }}
-          style={customStyles}
         >
           <div>
             Requirement:

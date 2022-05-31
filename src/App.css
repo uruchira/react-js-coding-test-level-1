@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+.App-input {
+  padding: 5px 10px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +39,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.pokemon-list {
+  margin: 10px 0;
+}
+
+.pokemon-list li {
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.pokemon-list li:hover {
+  color: yellow;
 }
