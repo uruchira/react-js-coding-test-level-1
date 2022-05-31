@@ -4,10 +4,10 @@ import axios from "axios";
 import Modal from "react-modal";
 
 import Loading from "./components/Loading";
-import { modalStyles } from "./styles";
+import Sorting from "./components/Sorting";
 
-const ASC = "ascending ";
-const DESC = "descending ";
+import { ASC, DESC } from "./constants";
+import { modalStyles } from "./styles";
 
 function PokeDex() {
   const [pokemons, setPokemons] = useState([]);
@@ -86,20 +86,7 @@ function PokeDex() {
           value={searchText}
           onChange={(e) => onSearchTextChange(e)}
         />
-        <div className="sorting-options">
-          <p
-            className={sortOption === ASC ? "current" : ""}
-            onClick={() => onSortChange(ASC)}
-          >
-            ASC
-          </p>
-          <p
-            className={sortOption === DESC ? "current" : ""}
-            onClick={() => onSortChange(DESC)}
-          >
-            DESC
-          </p>
-        </div>
+        <Sorting sortOption={sortOption} onSortChange={onSortChange} />
         <br />
         <>{renderPokemonData()}</>
       </header>
