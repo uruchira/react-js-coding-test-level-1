@@ -1,9 +1,10 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 
 import Loading from "./components/Loading";
+import { modalStyles } from "./styles";
 
 function PokeDex() {
   const [pokemons, setPokemons] = useState([]);
@@ -11,19 +12,7 @@ function PokeDex() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      background: "black",
-      color: "white",
-    },
-    overlay: { backgroundColor: "grey" },
-  };
+  const [searchText, setSearchText] = useState("");
 
   const fetchPokemonData = async () => {
     setIsLoading(true);
@@ -42,66 +31,55 @@ function PokeDex() {
     fetchPokemonData();
   }, []);
 
-  if (error) {
-    return (
-      <header className="App-header">
-        <p>{error.message}</p>
-      </header>
-    );
-  }
+  const pokemonItems = useMemo(
+    () =>
+      pokemons.filter(({ name }) =>
+        name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [pokemons, searchText]
+  );
 
-  if (!isLoading && pokemons.length === 0) {
-    return (
-      <div>
-        <header className="App-header">
-          <h1>Welcome to pokedex !</h1>
-          <h2>Requirement:</h2>
-          <ul>
-            <li>
-              Call this api:https://pokeapi.co/api/v2/pokemon to get pokedex,
-              and show a list of pokemon name. (DONE)
-            </li>
-            <li>Implement React Loading and show it during API call (DONE)</li>
-            <li>
-              when hover on the list item , change the item color to yellow.
-              (DONE)
-            </li>
-            <li>when clicked the list item, show the modal below</li>
-            <li>
-              Add a search bar on top of the bar for searching, search will run
-              on keyup event
-            </li>
-            <li>Implement sorting and pagingation</li>
-            <li>Commit your codes after done</li>
-            <li>
-              If you do more than expected (E.g redesign the page / create a
-              chat feature at the bottom right). it would be good.
-            </li>
-          </ul>
-        </header>
-      </div>
-    );
-  }
+  const onSearchTextChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const renderPokemonData = () => {
+    if (isLoading) {
+      return <Loading type="spin" color="white" />;
+    }
+    if (error) {
+      return <p>{error.message}</p>;
+    }
+    if (!isLoading && pokemonItems.length === 0) {
+      return <p>No pokemons found</p>;
+    }
+    if (pokemonItems.length) {
+      return (
+        <ul className="pokemon-list">
+          {pokemonItems.map((pokemonItem) => (
+            <li key={pokemonItem.url}>{pokemonItem.name}</li>
+          ))}
+        </ul>
+      );
+    }
+  };
 
   return (
     <div>
       <header className="App-header">
-        {isLoading ? (
-          <Loading type="spin" color="white" />
-        ) : (
-          <>
-            <h1>Welcome to pokedex !</h1>
-            <ul className="pokemon-list">
-              {pokemons.map((pokemon) => (
-                <li key={pokemon.url}>{pokemon.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
+        <h1>Welcome to pokedex !</h1>
+        <input
+          type="text"
+          className="App-input"
+          value={searchText}
+          onChange={(e) => onSearchTextChange(e)}
+        />
+        <br />
+        <>{renderPokemonData()}</>
       </header>
       {pokemonDetail && (
         <Modal
-          style={customStyles}
+          style={modalStyles}
           isOpen={pokemonDetail}
           contentLabel={pokemonDetail?.name || ""}
           onRequestClose={() => {
