@@ -6,6 +6,9 @@ import Modal from "react-modal";
 import Loading from "./components/Loading";
 import { modalStyles } from "./styles";
 
+const ASC = "ascending ";
+const DESC = "descending ";
+
 function PokeDex() {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonDetail, setPokemonDetail] = useState(null);
@@ -13,6 +16,7 @@ function PokeDex() {
   const [error, setError] = useState(null);
 
   const [searchText, setSearchText] = useState("");
+  const [sortOption, setSortOption] = useState("");
 
   const fetchPokemonData = async () => {
     setIsLoading(true);
@@ -31,17 +35,25 @@ function PokeDex() {
     fetchPokemonData();
   }, []);
 
-  const pokemonItems = useMemo(
-    () =>
-      pokemons.filter(({ name }) =>
-        name.toLowerCase().includes(searchText.toLowerCase())
-      ),
-    [pokemons, searchText]
-  );
-
   const onSearchTextChange = (e) => {
     setSearchText(e.target.value);
   };
+
+  const onSortChange = (option) => {
+    setSortOption(option);
+  };
+
+  const pokemonItems = useMemo(() => {
+    const filteredData = pokemons.filter(({ name }) =>
+      name.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    return sortOption === ASC
+      ? filteredData.sort((a, b) => (a.name < b.name ? -1 : 1))
+      : sortOption === DESC
+      ? filteredData.sort((a, b) => (a.name > b.name ? -1 : 1))
+      : filteredData;
+  }, [pokemons, searchText, sortOption]);
 
   const renderPokemonData = () => {
     if (isLoading) {
@@ -74,6 +86,20 @@ function PokeDex() {
           value={searchText}
           onChange={(e) => onSearchTextChange(e)}
         />
+        <div className="sorting-options">
+          <p
+            className={sortOption === ASC ? "current" : ""}
+            onClick={() => onSortChange(ASC)}
+          >
+            ASC
+          </p>
+          <p
+            className={sortOption === DESC ? "current" : ""}
+            onClick={() => onSortChange(DESC)}
+          >
+            DESC
+          </p>
+        </div>
         <br />
         <>{renderPokemonData()}</>
       </header>

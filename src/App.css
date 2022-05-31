@@ -28,6 +28,11 @@
 }
 
 .App-input {
+  border-radius: 3px;
+  font-size: 1rem;
+  height: 30px;
+  line-height: 30px;
+  min-width: 200px;
   padding: 5px 10px;
 }
 
@@ -52,4 +57,23 @@
 
 .pokemon-list li:hover {
   color: yellow;
+}
+
+.sorting-options {
+  align-items: center;
+  display: flex;
+  width: 220px;
+}
+
+.sorting-options p {
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-right: 10px;
+  padding: 5px 10px;
+}
+
+.sorting-options p.current {
+  background-color: #61dafb;
+  border-radius: 12px;
+  color: #282c34;
 }
