@@ -6,8 +6,9 @@ import Modal from "react-modal";
 import Loading from "./components/Loading";
 import Sorting from "./components/Sorting";
 import Pagination from "./components/Pagination";
+import Table from "./components/Table";
 
-import { sortPokemonData } from "./util";
+import { sortPokemonData, formatStatsData } from "./util";
 import { POKEMON_API_URL } from "./constants";
 import { modalStyles } from "./styles";
 
@@ -35,7 +36,6 @@ function PokeDex() {
         setNextPageUrl(data.next);
         setPreviousPageUrl(data.previous);
       } else {
-        console.log(data);
         setPokemonDetail(data);
       }
     } catch (error) {
@@ -138,6 +138,11 @@ function PokeDex() {
             <img
               src={pokemonDetail.sprites.front_default}
               alt={pokemonDetail.name}
+            />
+            <h4>Stats Details</h4>
+            <Table
+              columns={["Name", "Value"]}
+              rows={formatStatsData(pokemonDetail.stats)}
             />
           </div>
         </Modal>

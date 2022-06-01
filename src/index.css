@@ -16,3 +16,8 @@ ul,
 ol {
   list-style: none;
 }
+
+table {
+  text-align: left;
+  width: 100%;
+}

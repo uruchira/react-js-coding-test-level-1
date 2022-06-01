@@ -7,3 +7,11 @@ export const sortPokemonData = (sortValue, data) => {
     ? data.sort((a, b) => (a.name > b.name ? -1 : 1))
     : data;
 };
+
+export const formatStatsData = (stats) => {
+  return stats.map((st) => ({
+    url: st?.stat.url,
+    name: st?.stat.name,
+    amount: st.base_stat,
+  }));
+};
