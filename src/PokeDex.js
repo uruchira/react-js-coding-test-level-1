@@ -14,6 +14,7 @@ import { modalStyles } from "./styles";
 function PokeDex() {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonDetail, setPokemonDetail] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,9 +30,14 @@ function PokeDex() {
     try {
       const { data } = await axios.get(url);
       setError(null);
-      setPokemons(data.results);
-      setNextPageUrl(data.next);
-      setPreviousPageUrl(data.previous);
+      if (data.hasOwnProperty("results")) {
+        setPokemons(data.results);
+        setNextPageUrl(data.next);
+        setPreviousPageUrl(data.previous);
+      } else {
+        console.log(data);
+        setPokemonDetail(data);
+      }
     } catch (error) {
       setError(error);
     } finally {
@@ -59,6 +65,10 @@ function PokeDex() {
     setCurrentPageUrl(previousPageUrl);
   }
 
+  function onPokemonSelect(apiUrl) {
+    setCurrentPageUrl(apiUrl);
+  }
+
   const pokemonItems = useMemo(() => {
     const filteredData = pokemons.filter(({ name }) =>
       name.toLowerCase().includes(searchText.toLowerCase())
@@ -79,11 +89,22 @@ function PokeDex() {
     }
     if (pokemonItems.length) {
       return (
-        <ul className="pokemon-list">
-          {pokemonItems.map((pokemonItem) => (
-            <li key={pokemonItem.url}>{pokemonItem.name}</li>
-          ))}
-        </ul>
+        <>
+          <ul className="pokemon-list">
+            {pokemonItems.map((pokemonItem) => (
+              <li
+                key={pokemonItem.url}
+                onClick={() => onPokemonSelect(pokemonItem.url)}
+              >
+                {pokemonItem.name}
+              </li>
+            ))}
+          </ul>
+          <Pagination
+            gotoNextPage={nextPageUrl ? gotoNextPage : null}
+            gotoPrevPage={previousPageUrl ? gotoPreviousPage : null}
+          />
+        </>
       );
     }
   };
@@ -101,21 +122,24 @@ function PokeDex() {
         <Sorting sortOption={sortOption} onSortChange={onSortChange} />
         <br />
         <>{renderPokemonData()}</>
-        <Pagination
-          gotoNextPage={nextPageUrl ? gotoNextPage : null}
-          gotoPrevPage={previousPageUrl ? gotoPreviousPage : null}
-        />
       </header>
       {pokemonDetail && (
         <Modal
           style={modalStyles}
-          isOpen={pokemonDetail}
+          ariaHideApp={false}
+          isOpen={!!pokemonDetail}
           contentLabel={pokemonDetail?.name || ""}
           onRequestClose={() => {
             setPokemonDetail(null);
           }}
         >
-          <p>Modal Content goes here...</p>
+          <div className="pokemon-detail">
+            <h2>{pokemonDetail.name}</h2>
+            <img
+              src={pokemonDetail.sprites.front_default}
+              alt={pokemonDetail.name}
+            />
+          </div>
         </Modal>
       )}
     </div>

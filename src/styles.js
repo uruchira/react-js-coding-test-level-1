@@ -8,6 +8,8 @@ export const modalStyles = {
     transform: "translate(-50%, -50%)",
     background: "black",
     color: "white",
+    minHeight: "300px",
+    minWidth: "500px",
   },
   overlay: { backgroundColor: "grey" },
 };

@@ -92,3 +92,11 @@
   color: #61dafb;
   padding: 5px 10px;
 }
+
+.pokemon-detail {
+  text-align: center;
+}
+
+.pokemon-detail h2 {
+  text-transform: capitalize;
+}
