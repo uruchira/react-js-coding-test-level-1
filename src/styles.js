@@ -9,7 +9,7 @@ export const modalStyles = {
     background: "black",
     color: "white",
     minHeight: "300px",
-    minWidth: "500px",
+    minWidth: "600px",
   },
   overlay: { backgroundColor: "grey" },
 };

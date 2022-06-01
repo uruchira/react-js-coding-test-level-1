@@ -7,8 +7,13 @@ import Loading from "./components/Loading";
 import Sorting from "./components/Sorting";
 import Pagination from "./components/Pagination";
 import Table from "./components/Table";
+import BarChart from "./components/BarChart";
 
-import { sortPokemonData, formatStatsData } from "./util";
+import {
+  sortPokemonData,
+  formatStatsForTable,
+  formatStatsForChart,
+} from "./util";
 import { POKEMON_API_URL } from "./constants";
 import { modalStyles } from "./styles";
 
@@ -139,11 +144,18 @@ function PokeDex() {
               src={pokemonDetail.sprites.front_default}
               alt={pokemonDetail.name}
             />
-            <h4>Stats Details</h4>
-            <Table
-              columns={["Name", "Value"]}
-              rows={formatStatsData(pokemonDetail.stats)}
-            />
+            <div className="pokemon-stats">
+              <Table
+                columns={["Name", "Value"]}
+                rows={formatStatsForTable(pokemonDetail.stats)}
+              />
+              <BarChart
+                data={formatStatsForChart(
+                  pokemonDetail?.stats,
+                  pokemonDetail.name
+                )}
+              />
+            </div>
           </div>
         </Modal>
       )}

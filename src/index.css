@@ -21,3 +21,12 @@ table {
   text-align: left;
   width: 100%;
 }
+
+table td {
+  padding: 3px;
+}
+
+table thead th {
+  border-bottom: 1px solid #fff;
+  padding: 5px;
+}

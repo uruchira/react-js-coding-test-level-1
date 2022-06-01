@@ -98,5 +98,11 @@
 }
 
 .pokemon-detail h2 {
+  margin: 0 0 5px 0;
   text-transform: capitalize;
+}
+
+.pokemon-stats {
+  margin: 0 auto;
+  width: 90%;
 }

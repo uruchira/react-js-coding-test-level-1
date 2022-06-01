@@ -30,6 +30,7 @@ function Home() {
             style={{ padding: "10px" }}
           />
         </NavLink>
+        <br />
         <b>
           Requirement: Try to show the hidden image and make it clickable that
           goes to /pokedex when the input below is "Ready!" remember to hide the
