@@ -1,7 +1,10 @@
 import "./App.css";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import Modal from "react-modal";
+
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 import Loading from "./components/Loading";
 import Sorting from "./components/Sorting";
@@ -30,6 +33,22 @@ function PokeDex() {
   const [currentPageUrl, setCurrentPageUrl] = useState(POKEMON_API_URL);
   const [nextPageUrl, setNextPageUrl] = useState();
   const [previousPageUrl, setPreviousPageUrl] = useState();
+
+  const pdfRef = useRef();
+
+  const handleDownloadPdf = async () => {
+    const element = pdfRef.current;
+    const canvas = await html2canvas(element);
+    const data = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF();
+    const imgProperties = pdf.getImageProperties(data);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+
+    pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("pokemon-detail.pdf");
+  };
 
   const fetchPokemonData = async (url) => {
     setIsLoading(true);
@@ -138,7 +157,7 @@ function PokeDex() {
             setPokemonDetail(null);
           }}
         >
-          <div className="pokemon-detail">
+          <div className="pokemon-detail" ref={pdfRef}>
             <h2>{pokemonDetail.name}</h2>
             <img
               src={pokemonDetail.sprites.front_default}
@@ -156,6 +175,12 @@ function PokeDex() {
                 )}
               />
             </div>
+          </div>
+          <br />
+          <div className="download-section">
+            <button type="button" onClick={handleDownloadPdf}>
+              Download as PDF
+            </button>
           </div>
         </Modal>
       )}

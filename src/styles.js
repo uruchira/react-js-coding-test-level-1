@@ -6,7 +6,7 @@ export const modalStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    background: "black",
+    background: "white",
     color: "white",
     minHeight: "300px",
     minWidth: "600px",
