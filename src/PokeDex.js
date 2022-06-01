@@ -7,7 +7,8 @@ import Loading from "./components/Loading";
 import Sorting from "./components/Sorting";
 import Pagination from "./components/Pagination";
 
-import { ASC, DESC } from "./constants";
+import { sortPokemonData } from "./util";
+import { POKEMON_API_URL } from "./constants";
 import { modalStyles } from "./styles";
 
 function PokeDex() {
@@ -19,9 +20,7 @@ function PokeDex() {
   const [searchText, setSearchText] = useState("");
   const [sortOption, setSortOption] = useState("");
 
-  const [currentPageUrl, setCurrentPageUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon"
-  );
+  const [currentPageUrl, setCurrentPageUrl] = useState(POKEMON_API_URL);
   const [nextPageUrl, setNextPageUrl] = useState();
   const [previousPageUrl, setPreviousPageUrl] = useState();
 
@@ -65,11 +64,7 @@ function PokeDex() {
       name.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    return sortOption === ASC
-      ? filteredData.sort((a, b) => (a.name < b.name ? -1 : 1))
-      : sortOption === DESC
-      ? filteredData.sort((a, b) => (a.name > b.name ? -1 : 1))
-      : filteredData;
+    return sortPokemonData(sortOption, filteredData);
   }, [pokemons, searchText, sortOption]);
 
   const renderPokemonData = () => {
@@ -120,21 +115,7 @@ function PokeDex() {
             setPokemonDetail(null);
           }}
         >
-          <div>
-            Requirement:
-            <ul>
-              <li>show the sprites front_default as the pokemon image</li>
-              <li>
-                Show the stats details - only stat.name and base_stat is
-                required in tabular format
-              </li>
-              <li>Create a bar chart based on the stats above</li>
-              <li>
-                Create a buttton to download the information generated in this
-                modal as pdf. (images and chart must be included)
-              </li>
-            </ul>
-          </div>
+          <p>Modal Content goes here...</p>
         </Modal>
       )}
     </div>

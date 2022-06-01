@@ -1,7 +1,7 @@
 function TestInstructions() {
   return (
     <header className="App-header">
-      <h2>Requirement:</h2>
+      <h2>Requirement 2 :</h2>
       <ul>
         <li>
           Call this api:https://pokeapi.co/api/v2/pokemon to get pokedex, and
@@ -23,6 +23,21 @@ function TestInstructions() {
           feature at the bottom right). it would be good.
         </li>
       </ul>
+      <div>
+        <h2>Requirement 3 :</h2>
+        <ul>
+          <li>show the sprites front_default as the pokemon image</li>
+          <li>
+            Show the stats details - only stat.name and base_stat is required in
+            tabular format
+          </li>
+          <li>Create a bar chart based on the stats above</li>
+          <li>
+            Create a buttton to download the information generated in this modal
+            as pdf. (images and chart must be included)
+          </li>
+        </ul>
+      </div>
     </header>
   );
 }
